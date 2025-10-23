@@ -142,7 +142,7 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 #### News (`/api/news`)
 - **Method**: POST
-- **Body**: `{ query, language }`
+- **Body**: `{ query }`
 - **Response**: News summary with sources
 
 #### Web Search (`/api/chat/web`)
@@ -196,7 +196,6 @@ node scripts/diagnose-user.js USER_ID
 
 ### 2. News Summary
 - Real-time Tavily search (10 sources)
-- Multi-language support (12 languages)
 - Personalized based on user crops/location
 - Source citations with links
 

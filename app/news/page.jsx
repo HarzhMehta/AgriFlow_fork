@@ -5,16 +5,12 @@ import Image from 'next/image';
 import { assets } from '@/assets/assets';
 import ReactMarkdown from 'react-markdown';
 import ThemeToggle from '@/components/ThemeToggle';
-
-const languages = [
-  'English', 'Hindi', 'Marathi', 'Punjabi', 'Bengali', 'Tamil', 
-  'Telugu', 'Gujarati', 'Kannada', 'Malayalam', 'Urdu', 'Spanish'
-];
+import Sidebar from '@/components/Sidebar';
 
 export default function NewsPage() {
   const router = useRouter();
+  const [expand, setExpand] = useState(false);
   const [query, setQuery] = useState('');
-  const [language, setLanguage] = useState('English');
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState('');
@@ -34,7 +30,7 @@ export default function NewsPage() {
       const res = await fetch('/api/news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, language })
+        body: JSON.stringify({ query })
       });
 
       const data = await res.json();
@@ -52,11 +48,16 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="min-h-screen news-bg p-4">
-      <ThemeToggle />
-      <div className="max-w-5xl mx-auto py-8">
-        {/* Header */}
-        <div className="card-bg bg-white rounded-2xl shadow-2xl p-6 mb-6">
+    <div className="flex min-h-screen news-bg">
+      {/* Sidebar */}
+      <Sidebar expand={expand} setExpand={setExpand} />
+      
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${expand ? 'ml-64' : 'ml-20'}`}>
+        <ThemeToggle />
+        <div className="max-w-5xl mx-auto py-8 px-4">
+          {/* Header */}
+          <div className="card-bg bg-white rounded-2xl shadow-2xl p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <Image src={assets.logo_icon} alt="AgriFlow" className="w-12 h-auto" />
@@ -86,21 +87,6 @@ export default function NewsPage() {
                 placeholder="e.g., rice farming techniques, wheat prices, organic farming..."
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-800"
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Output Language
-              </label>
-              <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-800"
-              >
-                {languages.map(lang => (
-                  <option key={lang} value={lang}>{lang}</option>
-                ))}
-              </select>
             </div>
 
             {error && (
@@ -247,6 +233,7 @@ export default function NewsPage() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

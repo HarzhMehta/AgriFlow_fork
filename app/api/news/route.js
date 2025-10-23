@@ -9,7 +9,7 @@ export const maxDuration = 60;
 export async function POST(req) {
   try {
     const { userId } = getAuth(req);
-    const { query, language = 'English' } = await req.json();
+    const { query } = await req.json();
 
     if (!query) {
       return NextResponse.json(
@@ -23,17 +23,17 @@ export async function POST(req) {
     const userContext = buildUserContext(userProfile);
     const enhancedSearchTerms = getSearchEnhancementTerms(userProfile);
 
-    // Step 1: Search the web using Tavily
+    // Search the web using Tavily
     const searchResults = await searchAgricultureNews(query, enhancedSearchTerms);
 
-    // Step 3: Create comprehensive context from search results
+    // Create context from search results
     const searchContext = searchResults
       .map((result, idx) => 
         `[Source ${idx + 1}] ${result.title}\nURL: ${result.url}\nPublished: ${result.published_date || 'N/A'}\nContent: ${result.content}\n`
       )
       .join('\n---\n');
 
-    // Enhanced prompt using REAL search results
+    // Build prompt for AI
     const prompt = `You are an agricultural news summarizer. You have been provided with REAL search results from the internet about: "${query}"
 ${userContext}
 
@@ -43,7 +43,7 @@ ${searchContext}
 
 Your task:
 1. Analyze ALL the provided sources above
-2. Create a comprehensive, well-organized summary in ${language} language
+2. Create a comprehensive, well-organized summary
 3. Include key points from multiple sources
 4. Mention specific dates, statistics, and facts from the articles
 5. Cite sources by number [Source 1], [Source 2], etc.
@@ -70,7 +70,6 @@ Format your response as follows:
 ${searchResults.map((r, i) => `[${i + 1}] ${r.title}\n   ${r.url}\n   Published: ${r.published_date || 'N/A'}`).join('\n\n')}
 
 ---
-**Language:** ${language}  
 **Search Results:** ${searchResults.length} articles analyzed  
 **Generated:** ${new Date().toLocaleString()}
 
@@ -87,7 +86,6 @@ Please provide an accurate summary based ONLY on the real articles provided abov
       success: true,
       data: {
         query,
-        language,
         summary,
         sources: searchResults,
         resultsCount: searchResults.length,
