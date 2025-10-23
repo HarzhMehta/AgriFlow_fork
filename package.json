@@ -1,0 +1,47 @@
+{
+  "name": "deepseek",
+  "version": "1.0.0",
+  "description": "AI chat application with document processing and Gemini Vision",
+  "author": "Pratham Tomar",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "setup": "npm install && echo '\n✅ Dependencies installed! \n📝 Next: Copy .env.example to .env and add your API keys\n📖 See SETUP.md for detailed instructions\n'",
+    "check": "npm outdated && npm audit",
+    "verify": "node check-setup.js"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.12.4",
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/community": "^0.3.57",
+    "@langchain/core": "^0.3.78",
+    "@tailwindcss/typography": "^0.5.19",
+    "axios": "^1.12.2",
+    "dotenv": "^16.6.1",
+    "langchain": "^0.3.36",
+    "mammoth": "^1.11.0",
+    "mongoose": "^8.19.1",
+    "next": "^15.5.6",
+    "openai": "^4.104.0",
+    "pdf.js-extract": "^0.2.1",
+    "prismjs": "^1.30.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.6.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "svix": "^1.77.0",
+    "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.1",
+    "tailwindcss": "^4"
+  }
+}
