@@ -60,19 +60,6 @@ const Sidebar = ({expand, setExpand}) => {
           </div>
         )}
 
-        {/* Weather Forecast Link */}
-        {user && (
-          <div onClick={() => router.push('/weather')}
-           className={`flex items-center mb-2 cursor-pointer group relative ${expand ? "gap-2 text-white/80 text-sm p-2.5 border border-white/20 rounded-lg hover:bg-white/10" : "h-10 w-10 mx-auto hover:bg-gray-500/30 rounded-lg justify-center"}`}>
-              <span className={expand ? "text-xl" : "text-2xl"}>🌤️</span>
-              <div className={`absolute w-max ${!expand && "-right-32"} -top-12 opacity-0 group-hover:opacity-100 transition bg-black text-white text-sm px-3 py-2 rounded-lg shadow-lg pointer-events-none`}>
-                  Weather Forecast
-                  <div className={`w-3 h-3 absolute bg-black rotate-45 ${expand ? "right-1/2" : "left-4"} -bottom-1.5`}></div>
-              </div>
-              {expand && <span>Weather Forecast</span>}
-          </div>
-        )}
-
         {/* Edit Profile Link */}
         {user && (
           <div onClick={() => router.push('/profile')}

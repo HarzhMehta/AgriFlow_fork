@@ -1,13 +1,9 @@
-import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-import connectDB from "@/config/db";
-import User from "@/models/User";
+import { generateChatCompletion } from "@/lib/groq";
+import { searchAgricultureNews } from "@/lib/tavily";
+import { getUserProfile, buildUserContext, getSearchEnhancementTerms } from "@/lib/user";
 
-const openai = new OpenAI({
-    apiKey: process.env.GROQ_API_KEY,
-    baseURL: "https://api.groq.com/openai/v1",
-});
 export const maxDuration = 60;
 
 export async function POST(req) {
@@ -23,82 +19,12 @@ export async function POST(req) {
     }
 
     // Get user profile for personalized news search
-    let userProfile = null;
-    let userContext = '';
-    let enhancedSearchTerms = '';
-    
-    if (userId) {
-      try {
-        await connectDB();
-        userProfile = await User.findById(userId);
-        
-        if (userProfile && userProfile.profileCompleted) {
-          // Build user context for AI
-          userContext = `\n\n[User Profile]
-Farmer: ${userProfile.username || 'Unknown'}
-Location: ${userProfile.location || 'Not specified'}
-Field Size: ${userProfile.fieldSize || 'Not specified'}
-Crops: ${userProfile.cropsGrown && userProfile.cropsGrown.length > 0 ? userProfile.cropsGrown.join(', ') : 'Not specified'}
-Climate: ${userProfile.climate || 'Not specified'}
-
-Note: Prioritize news relevant to this farmer's location, crops, and climate conditions.`;
-
-          // Build enhanced search query with location and crops
-          const locationTerm = userProfile.location ? ` ${userProfile.location}` : '';
-          const cropsTerm = userProfile.cropsGrown && userProfile.cropsGrown.length > 0 
-            ? ` ${userProfile.cropsGrown.join(' ')}` 
-            : '';
-          enhancedSearchTerms = `${locationTerm}${cropsTerm}`;
-        }
-      } catch (error) {
-        console.log('Error fetching user profile:', error);
-        // Continue without user context if there's an error
-      }
-    }
+    const userProfile = await getUserProfile(userId);
+    const userContext = buildUserContext(userProfile);
+    const enhancedSearchTerms = getSearchEnhancementTerms(userProfile);
 
     // Step 1: Search the web using Tavily
-    const tavilyApiKey = process.env.TAVILY_API_KEY;
-    if (!tavilyApiKey) {
-      return NextResponse.json(
-        { success: false, error: 'TAVILY_API_KEY not configured' },
-        { status: 500 }
-      );
-    }
-
-    const tavilyResponse = await fetch("https://api.tavily.com/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${tavilyApiKey}`,
-      },
-      body: JSON.stringify({
-        query: `${query} agriculture farming news latest updates${enhancedSearchTerms}`,
-        max_results: 10,
-        include_answer: true,
-        include_raw_content: true,
-        search_depth: "advanced",
-      }),
-    });
-
-    
-    const tavilyData = await tavilyResponse.json();
-    console.log(tavilyData)
-
-    if (!tavilyData || !tavilyData.results || tavilyData.results.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'No search results found' },
-        { status: 404 }
-      );
-    }
-
-    // Step 2: Extract content from search results
-    const searchResults = tavilyData.results.map(result => ({
-      title: result.title || 'No title',
-      url: result.url || '',
-      content: result.content || '',
-      score: result.score || 0,
-      published_date: result.published_date || null
-    }));
+    const searchResults = await searchAgricultureNews(query, enhancedSearchTerms);
 
     // Step 3: Create comprehensive context from search results
     const searchContext = searchResults
@@ -151,14 +77,11 @@ ${searchResults.map((r, i) => `[${i + 1}] ${r.title}\n   ${r.url}\n   Published:
 Please provide an accurate summary based ONLY on the real articles provided above. Do not add information not present in the sources.`;
 
     // Generate response using Groq
-    const completion = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
+    const summary = await generateChatCompletion(prompt, {
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       max_tokens: 4000,
     });
-
-    const summary = completion.choices[0].message.content;
 
     return NextResponse.json({
       success: true,
