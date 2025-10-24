@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "NoBody",
+  title: "AgriFlow AI",
   description: "Full Stack Project",
 };
 

@@ -4,6 +4,7 @@ import Message from "@/components/Message";
 import PromptBox from "@/components/PromptBox";
 import Sidebar from "@/components/Sidebar";
 import ThemeToggle from "@/components/ThemeToggle";
+import Weather from "@/components/Weather";
 import { useAppContext } from "@/context/AppContext";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
@@ -109,13 +110,16 @@ export default function Home() {
           
           {/* Mobile Header */}
           <div className="md:hidden absolute px-4 top-6 flex items-center justify-between w-full">
-            <Image onClick={() => setExpand(!expand)} className="rotate-180" src={assets.menu_icon} alt="Menu" />
-            <Image className="opacity-70" src={assets.chat_icon} alt="Chat" />
+            <Image onClick={() => setExpand(!expand)} className="rotate-180 sidebar-icon" src={assets.menu_icon} alt="Menu" />
+            <Image className="opacity-70 sidebar-icon" src={assets.chat_icon} alt="Chat" />
           </div>
 
           {/* Welcome or Chat Display */}
           {messages.length === 0 ? (
             <div className="text-center">
+              <div className="w-full max-w-3xl px-4 mt-16">
+                <Weather />
+              </div>
               <div className="flex items-center gap-3 justify-center">
                 <Image src={assets.logo_icon} alt="Logo" className="w-12 h-auto" />
                 <p className="text-2xl font-medium">Hi, I'm AgriFlow AI 🌾</p>
@@ -124,6 +128,9 @@ export default function Home() {
             </div>
           ) : (
             <div ref={containerRef} onScroll={handleScroll} className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto">
+              <div className="w-full max-w-3xl px-4 mb-4">
+                <Weather />
+              </div>
               <p className="fixed top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">
                 {selectedChat.name}
               </p>
