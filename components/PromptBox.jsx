@@ -279,7 +279,7 @@ const PromptBox = ({setIsLoading, isLoading, isAnimatingRef}) => {
         onKeyDown={handleKeyDown}
         className={`outline-none w-full resize-none overflow-hidden break-words bg-transparent ${isLoading || isTyping ? 'opacity-50 cursor-not-allowed' : ''}`}
         rows={2}
-        placeholder={isLoading || isTyping ? 'Please wait...' : 'Message NoBody'}
+    placeholder={isLoading || isTyping ? 'Please wait...' : 'Ask AgriFlow AI...'}
         required 
         disabled={isLoading || isTyping}
         onChange={(e)=> setPrompt(e.target.value)} value={prompt}/>

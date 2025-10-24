@@ -29,15 +29,15 @@ return (
 {
 role === 'user' ? (
     <>
-    <Image onClick={copyMessage} src={assets.copy_icon} alt='' className='w-4 cursor-pointer'/>
-    <Image src={assets.pencil_icon} alt='' className='w-4.5 cursor-pointer'/>
+    <Image onClick={copyMessage} src={assets.copy_icon} alt='' className='w-4 cursor-pointer message-action-btn'/>
+    <Image src={assets.pencil_icon} alt='' className='w-4.5 cursor-pointer message-action-btn'/>
     </>
 ):(
     <>
-    <Image onClick={copyMessage} src={assets.copy_icon} alt='' className='w-4.5 cursor-pointer'/>
-    <Image src={assets.regenerate_icon} alt='' className='w-4 cursor-pointer'/>
-    <Image src={assets.like_icon} alt='' className='w-4 cursor-pointer'/>
-    <Image src={assets.dislike_icon} alt='' className='w-4 cursor-pointer'/>
+    <Image onClick={copyMessage} src={assets.copy_icon} alt='' className='w-4.5 cursor-pointer message-action-btn'/>
+    <Image src={assets.regenerate_icon} alt='' className='w-4 cursor-pointer message-action-btn'/>
+    <Image src={assets.like_icon} alt='' className='w-4 cursor-pointer message-action-btn'/>
+    <Image src={assets.dislike_icon} alt='' className='w-4 cursor-pointer message-action-btn'/>
     </>
 )
 }

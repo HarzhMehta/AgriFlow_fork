@@ -24,6 +24,24 @@ html.light * {
   color: #000000 !important;
 }
 
+.sidebar-tooltip-text {
+  color: #f9fafb;
+  font-weight: 500;
+}
+
+.sidebar-item {
+  min-height: 2.25rem;
+}
+
+/* Dark mode sidebar text colors */
+html:not(.light) .sidebar-text {
+  color: #ffffff !important;
+}
+
+html:not(.light) .sidebar-text.text-white\/50 {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
 html.light [class*="bg-[#292a2d]"] {
   background-color: #e8f4f8 !important;
 }
@@ -35,6 +53,46 @@ html.light [class*="bg-[#404045]"] {
 html.light [class*="bg-[#212327]"] {
   background-color: #f0f9ff !important;
   border-right: 1px solid #b3d9eb;
+}
+
+/* Sidebar specific light mode styles */
+html.light .sidebar-text {
+  color: #1f2937 !important;
+}
+
+html.light .sidebar-tooltip-text {
+  color: #ffffff !important;
+}
+
+html.light .sidebar-icon {
+  filter: brightness(0.4) !important;
+}
+
+html.light .sidebar-icon-btn:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+html.light button.bg-primary .sidebar-text {
+  color: #ffffff !important;
+}
+
+/* Border colors in light mode for sidebar */
+html.light [class*="border-white/20"] {
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+html.light [class*="border-primary"] {
+  border-color: #3b82f6 !important;
+}
+
+/* Chat menu dropdown in light mode */
+html.light .chat-menu-dropdown {
+  background-color: #e5e7eb !important;
+  border: 1px solid #d1d5db !important;
+}
+
+html.light .chat-menu-dropdown:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
 }
 
 html.light [class*="bg-[#414158]"] {
@@ -63,6 +121,23 @@ html.light div {
 html.light textarea::placeholder,
 html.light input::placeholder {
   color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+/* Dark mode placeholders */
+html:not(.light) textarea::placeholder,
+html:not(.light) input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Message action buttons in light mode */
+html.light .message-action-btn {
+  filter: brightness(0.3) !important;
+}
+
+html.light .message-action-btn:hover {
+  filter: brightness(0.1) !important;
 }
 
 html.light .loader div {
@@ -112,6 +187,76 @@ html.light .Toaster__toast * {
   background: linear-gradient(to bottom right, rgb(239 246 255), rgb(240 253 244));
 }
 
+.news-page .card-bg {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+html.light .news-page .card-bg {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+html.light .news-page .card-bg h1,
+html.light .news-page .card-bg h2,
+html.light .news-page .card-bg h3,
+html.light .news-page .card-bg h4,
+html.light .news-page .card-bg strong {
+  color: #1f2937 !important;
+}
+
+html.light .news-page .card-bg p,
+html.light .news-page .card-bg label,
+html.light .news-page .card-bg span,
+html.light .news-page .card-bg li {
+  color: #334155 !important;
+}
+
+html.light .news-page .card-bg input,
+/* (Removed) Google Translate widget styles */
+html.light .news-page .card-bg textarea {
+  background-color: #ffffff !important;
+  border-color: #bfdbfe !important;
+  color: #1f2937 !important;
+}
+
+html.light .news-page .card-bg input::placeholder,
+html.light .news-page .card-bg textarea::placeholder {
+  color: #64748b !important;
+}
+
+.news-page .news-primary-btn,
+.news-page .news-secondary-btn {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+html.light .news-page .news-primary-btn {
+  background-color: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+html:not(.light) .news-page .news-primary-btn {
+  background-color: #1d4ed8 !important;
+}
+
+html.light .news-page .news-secondary-btn {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+html:not(.light) .news-page .news-secondary-btn {
+  background-color: #15803d !important;
+}
+
+.news-page .news-source-index {
+  background-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+html:not(.light) .news-page .news-source-index {
+  background-color: #1d4ed8 !important;
+}
+
 html:not(.light) .news-bg {
   background: linear-gradient(to bottom right, rgb(30 41 59), rgb(22 101 52));
 }
@@ -129,10 +274,24 @@ html:not(.light) .card-bg {
 html:not(.light) .card-bg h1,
 html:not(.light) .card-bg h2,
 html:not(.light) .card-bg h3,
+html:not(.light) .card-bg h4,
 html:not(.light) .card-bg p,
 html:not(.light) .card-bg label,
-html:not(.light) .card-bg span {
+html:not(.light) .card-bg span,
+html:not(.light) .card-bg div,
+html:not(.light) .card-bg strong,
+html:not(.light) .card-bg li,
+html:not(.light) .card-bg a {
   color: #e2e8f0 !important;
+}
+
+/* Links in dark mode */
+html:not(.light) .card-bg a[href] {
+  color: #60a5fa !important;
+}
+
+html:not(.light) .card-bg a[href]:hover {
+  color: #93c5fd !important;
 }
 
 /* Input fields in dark mode */
@@ -168,6 +327,39 @@ html:not(.light) .prose a {
 html:not(.light) .prose code {
   background-color: #1a202c !important;
   color: #fbd38d !important;
+}
+
+/* Example topic buttons in dark mode */
+html:not(.light) .card-bg button[class*="border-blue"] {
+  background-color: #2d3748 !important;
+  border-color: #4a5568 !important;
+  color: #93c5fd !important;
+}
+
+html:not(.light) .card-bg button[class*="border-blue"]:hover {
+  background-color: #1a202c !important;
+  color: #bfdbfe !important;
+}
+
+/* Source card backgrounds in dark mode */
+html:not(.light) .source-card {
+  background-color: #1a202c !important;
+  color: #e2e8f0 !important;
+}
+
+html:not(.light) .source-card:hover {
+  background-color: #2d3748 !important;
+}
+
+/* Blue info boxes in dark mode */
+html:not(.light) .card-bg [class*="bg-blue-50"] {
+  background-color: #1e3a5f !important;
+  border-color: #2563eb !important;
+}
+
+html:not(.light) .card-bg [class*="text-blue-900"],
+html:not(.light) .card-bg [class*="text-blue-700"] {
+  color: #93c5fd !important;
 }
 
 html:not(.light) .prose table {
@@ -224,3 +416,5 @@ code{
 pre{
   border-radius: 10px !important;
 }
+
+/* (Google Translate styles removed) */

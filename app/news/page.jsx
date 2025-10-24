@@ -48,7 +48,7 @@ export default function NewsPage() {
   };
 
   return (
-    <div className="flex min-h-screen news-bg">
+    <div className="news-page flex min-h-screen news-bg">
       {/* Sidebar */}
       <Sidebar expand={expand} setExpand={setExpand} />
       
@@ -98,7 +98,7 @@ export default function NewsPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="news-primary-btn w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -127,7 +127,7 @@ export default function NewsPage() {
                   {summary.sources.map((source, idx) => (
                     <div key={idx} className="source-card p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                       <div className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                        <span className="news-source-index flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
                           {idx + 1}
                         </span>
                         <div className="flex-1">
@@ -170,7 +170,7 @@ export default function NewsPage() {
                 setQuery('');
                 setError('');
               }}
-              className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
+              className="news-secondary-btn mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors"
             >
               ✨ Search Another Topic
             </button>
