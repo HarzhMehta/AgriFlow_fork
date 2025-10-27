@@ -4,7 +4,6 @@ import Message from "@/components/Message";
 import PromptBox from "@/components/PromptBox";
 import Sidebar from "@/components/Sidebar";
 import ThemeToggle from "@/components/ThemeToggle";
-import Weather from "@/components/Weather";
 import { useAppContext } from "@/context/AppContext";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
@@ -23,6 +22,7 @@ export default function Home() {
   
   const containerRef = useRef(null);
   const userScrolledRef = useRef(false);
+  const bottomRef = useRef(null);
   const isAnimatingRef = useRef(false);
   const lastCheckedUserIdRef = useRef(null);
 
@@ -64,10 +64,35 @@ export default function Home() {
 
   // Auto-scroll to bottom
   useEffect(() => {
-    if (containerRef.current && !userScrolledRef.current) {
-      containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
-    }
-  }, [messages]);
+    // Don't auto-scroll if the user manually scrolled up
+    if (userScrolledRef.current) return;
+
+    // Robust scroll helper: ensure it runs after DOM updates / syntax highlighting
+    const doScroll = () => {
+      const behavior = isLoading ? 'auto' : 'smooth';
+      try {
+        if (bottomRef.current) {
+          // use scrollIntoView on the sentinel — it's more reliable
+          bottomRef.current.scrollIntoView({ behavior, block: 'end' });
+        } else if (containerRef.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+      } catch (e) {
+        // fallback to direct assignment
+        try { containerRef.current.scrollTop = containerRef.current.scrollHeight; } catch (_) {}
+      }
+    };
+
+    // Run on next animation frames to wait for the DOM to settle
+    let raf1 = requestAnimationFrame(() => requestAnimationFrame(doScroll));
+    // Extra fallback in case RAF misses (e.g., heavy rendering)
+    const t = setTimeout(doScroll, 100);
+
+    return () => {
+      cancelAnimationFrame(raf1);
+      clearTimeout(t);
+    };
+  }, [messages, isLoading]);
 
   // Track user scrolling
   const handleScroll = () => {
@@ -118,7 +143,6 @@ export default function Home() {
           {messages.length === 0 ? (
             <div className="text-center">
               <div className="w-full max-w-3xl px-4 mt-16">
-                <Weather />
               </div>
               <div className="flex items-center gap-3 justify-center">
                 <Image src={assets.logo_icon} alt="Logo" className="w-12 h-auto" />
@@ -128,9 +152,6 @@ export default function Home() {
             </div>
           ) : (
             <div ref={containerRef} onScroll={handleScroll} className="relative flex flex-col items-center justify-start w-full mt-20 max-h-screen overflow-y-auto">
-              <div className="w-full max-w-3xl px-4 mb-4">
-                <Weather />
-              </div>
               <p className="fixed top-8 border border-transparent hover:border-gray-500/50 py-1 px-2 rounded-lg font-semibold mb-6">
                 {selectedChat.name}
               </p>
@@ -147,6 +168,8 @@ export default function Home() {
                   </div>
                 </div>
               )}
+              {/* sentinel element for reliable scrolling */}
+              <div ref={bottomRef} />
             </div>
           )}
 

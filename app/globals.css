@@ -399,6 +399,46 @@ html:not(.light) button.btn-back:hover {
   background-color: #2d3748 !important;
 }
 
+/* ===== Google Translate: hide injected UI (banner/toolbar/iframes) ===== */
+/*
+  These rules hide the Google Translate banner/toolbar and related iframes/icons
+  while still allowing the page DOM to be translated by the widget.
+  Add to `app/globals.css` so it applies globally.
+*/
+
+/* Hide top translation banner (frame injected by the widget) */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+iframe[id^="goog-gt-"],
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Prevent page from being pushed down by the banner */
+body { top: 0 !important; }
+html { top: 0 !important; }
+
+/* Hide small translate gadget icon / menu (if injected) */
+.goog-te-gadget-icon,
+.goog-te-menu-value,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-popup-frame {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Extra: hide the 'powered by' link or small floating widgets */
+a[href*="translate.google"] {
+  display: none !important;
+}
+
+/* End Google Translate hiding rules */
 ::-webkit-scrollbar{
   display: none;
 }

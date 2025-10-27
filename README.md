@@ -1,279 +1,126 @@
 # AgriFlow
 
-AI-powered agricultural assistant built with Next.js, featuring real-time news, weather forecasts, and intelligent farming advice.
+AI-powered agricultural assistant with real-time weather, news, and intelligent farming advice.
 
-## 🌾 Features
+## Features
 
-- **AI Chat Assistant**: Agriculture-focused conversational AI using Groq's Llama 3.3 70B
-- **Real-time News**: Agricultural news summaries with Tavily search integration
-- **User Profiles**: Personalized advice based on crops, location, and climate
-- **Web Search**: Integrated Tavily search for up-to-date information
-- **Dark/Light Mode**: Theme toggle for better user experience
+- **AI Chat** - Agriculture-focused conversational AI (Groq Llama 3.3 70B)
+- **Live Weather** - Real-time weather forecasts with location support
+- **Ag News** - Personalized agricultural news summaries
+- **Web Search** - Integrated Tavily search for up-to-date information
+- **Multi-language** - Google Translate integration (9 languages)
+- **Dark/Light Mode** - Customizable themes
+- **User Profiles** - Personalized advice based on crops and location
 
-## 🚀 Tech Stack
+## Quick Start
 
-- **Framework**: Next.js 15.5.6 with App Router
-- **AI Model**: Groq (Llama 3.3 70B Versatile)
-- **Search API**: Tavily
-- **Authentication**: Clerk
-- **Database**: MongoDB with Mongoose
-- **Styling**: Tailwind CSS
-- **Language**: JavaScript/JSX
-
-## 📁 Project Structure
-
-```
-AgriFlow/
-├── app/
-│   ├── api/                  # API routes
-│   │   ├── chat/            # Chat-related endpoints
-│   │   │   ├── ai/          # AI chat completion
-│   │   │   ├── web/         # Web search
-│   │   │   ├── create/      # Create chat
-│   │   │   ├── get/         # Get chats
-│   │   │   ├── delete/      # Delete chat
-│   │   │   ├── rename/      # Rename chat
-│   │   │   └── upload/      # File upload
-│   │   ├── news/            # News summary API
-│   │   ├── user/profile/    # User profile management
-│   │   ├── clerk/           # Clerk webhook
-│   │   └── debug/profile/   # Debug endpoint
-│   ├── (pages)/             # Next.js pages
-│   │   ├── page.jsx         # Home/Chat page
-│   │   ├── news/            # News page
-│   │   ├── profile/         # Profile edit page
-│   │   ├── onboarding/      # User onboarding
-│   │   ├── debug/           # Debug page
-│   │   └── sign-in/sign-up/ # Auth pages
-│   ├── layout.js            # Root layout
-│   └── globals.css          # Global styles
-├── components/              # React components
-│   ├── ChatLabel.jsx
-│   ├── Message.jsx
-│   ├── PromptBox.jsx
-│   ├── Sidebar.jsx
-│   └── ThemeToggle.jsx
-├── lib/                     # Utility functions
-│   ├── groq.js             # Groq client utilities
-│   ├── tavily.js           # Tavily search utilities
-│   └── user.js             # User utilities
-├── models/                  # Database models
-│   ├── User.js
-│   └── Chat.js
-├── config/
-│   └── db.js               # Database connection
-├── context/
-│   └── AppContext.jsx      # React context
-├── scripts/                 # Utility scripts
-│   ├── check-profile.js
-│   ├── check-setup.js
-│   ├── check-status.js
-│   └── diagnose-user.js
-├── assets/                  # Static assets
-├── public/                  # Public files
-└── middleware.ts           # Clerk middleware
-
-```
-
-## 🔧 Installation
-
-1. **Clone the repository**
 ```bash
+# Clone and install
 git clone https://github.com/prathamtomar99/AgriFlow.git
 cd AgriFlow
-```
-
-2. **Install dependencies**
-```bash
 npm install
-```
 
-3. **Set up environment variables**
-Create a `.env.local` file:
-```bash
-# Groq API
-GROQ_API_KEY=your_groq_api_key
+# Configure environment
+cp .env.example .env.local  # Add your API keys
 
-# Tavily Search API
-TAVILY_API_KEY=your_tavily_api_key
-
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_pub_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-
-# MongoDB
-MONGODB_URI=your_mongodb_connection_string
-```
-
-4. **Run development server**
-```bash
+# Run development server
 npm run dev
 ```
 
-5. **Open your browser**
-Navigate to [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000)
 
-## 📚 API Documentation
-
-### Utility Functions
-
-#### `lib/groq.js`
-- `getGroqClient()` - Get singleton Groq client instance
-- `generateChatCompletion(messages, options)` - Generate AI responses
-
-#### `lib/tavily.js`
-- `tavilySearch(query, options)` - General web search
-- `searchAgricultureNews(query, userContext)` - Search agriculture news
-- `searchWeb(query)` - Quick web search for chat
-
-#### `lib/user.js`
-- `getUserProfile(userId)` - Fetch user from database
-- `buildUserContext(userProfile)` - Build AI context string
-- `getSearchEnhancementTerms(userProfile)` - Get search terms from profile
-
-### API Routes
-
-#### Chat AI (`/api/chat/ai`)
-- **Method**: POST
-- **Body**: `{ chatId, prompt, filesMeta, searchSelected, deepThinkSelected }`
-- **Response**: AI-generated agricultural advice
-
-#### News (`/api/news`)
-- **Method**: POST
-- **Body**: `{ query }`
-- **Response**: News summary with sources
-
-#### Web Search (`/api/chat/web`)
-- **Method**: POST
-- **Body**: `{ query }`
-- **Response**: Search results with references
-
-## 🛠️ Development Scripts
-
-Located in `scripts/` directory:
+## Environment Variables
 
 ```bash
-# Check user profile
-node scripts/check-profile.js USER_ID
+# Required
+GROQ_API_KEY=your_groq_api_key
+TAVILY_API_KEY=your_tavily_api_key
+MONGODB_URI=your_mongodb_uri
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_pub_key
+CLERK_SECRET_KEY=your_clerk_secret_key
 
-# Check setup status
-node scripts/check-setup.js
-
-# Check system status
-node scripts/check-status.js
-
-# Diagnose user issues
-node scripts/diagnose-user.js USER_ID
+# Clerk URLs
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 ```
 
-## 🎨 Code Architecture
+## Tech Stack
 
-### Separation of Concerns
+- **Framework**: Next.js 15 (App Router)
+- **AI**: Groq (Llama 3.3 70B)
+- **Search**: Tavily API
+- **Auth**: Clerk
+- **Database**: MongoDB + Mongoose
+- **Styling**: Tailwind CSS
 
-1. **API Routes** (`app/api/`): Handle HTTP requests
-2. **Utilities** (`lib/`): Reusable functions (Groq, Tavily, User)
-3. **Components** (`components/`): React UI components
-4. **Models** (`models/`): Database schemas
-5. **Scripts** (`scripts/`): CLI utilities for debugging
+## Project Structure
 
-### Key Design Patterns
+```
+app/
+├── api/              # API routes (chat, news, profile, weather)
+├── page.jsx          # Main chat interface
+├── news/             # News page
+├── profile/          # User profile
+└── layout.js         # Root layout
+components/           # React components
+├── Sidebar.jsx       # Chat history
+├── PromptBox.jsx     # Input area
+├── Message.jsx       # Chat messages
+├── Weather.jsx       # Weather widget
+└── ThemeToggle.jsx   # Theme/language/weather controls
+lib/                  # Utilities (groq, tavily, user)
+models/               # MongoDB schemas (User, Chat)
+```
 
-- **Singleton Pattern**: Groq client instance
-- **Factory Pattern**: Utility functions for search/AI
-- **Context API**: Global state management
-- **Middleware**: Authentication guards
+## Key Features
 
-## 🌟 Features in Detail
-
-### 1. Smart Agriculture Chat
-- Agriculture-only validation
-- Context-aware responses
-- File upload support (OCR)
+### Smart Agriculture Chat
+- Agriculture-only responses
+- File upload with OCR
 - Web search integration
 - Conversation history
 
-### 2. News Summary
-- Real-time Tavily search (10 sources)
-- Personalized based on user crops/location
-- Source citations with links
+### Weather Integration
+- Real-time forecasts
+- Location-based data
+- 3-day predictions
+- Current conditions
 
-### 3. User Personalization
-- Profile with crops, location, climate
-- Personalized search results
-- Tailored farming advice
-- Profile edit functionality
+### Multi-language Support
+- Google Translate widget
+- 9 languages supported
+- Seamless translation
+- Persistent selection
 
-## 🔐 Environment Variables
+## Available Scripts
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GROQ_API_KEY` | Groq API key for AI | Yes |
-| `TAVILY_API_KEY` | Tavily API key for search | Yes |
-| `MONGODB_URI` | MongoDB connection string | Yes |
-| `CLERK_SECRET_KEY` | Clerk authentication key | Yes |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk public key | Yes |
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start            # Start production server
 
-## 🚀 Deployment
+# Debugging utilities
+node scripts/check-setup.js              # Verify setup
+node scripts/check-profile.js USER_ID    # Check user profile
+node scripts/diagnose-user.js USER_ID    # Diagnose issues
+```
 
-### Vercel (Recommended)
+## Deployment
 
-1. Push code to GitHub
-2. Import project in Vercel
+**Vercel** (Recommended):
+1. Push to GitHub
+2. Import in Vercel
 3. Add environment variables
 4. Deploy
 
-### Manual Deployment
+## License
 
-```bash
-npm run build
-npm start
-```
+MIT License
 
-## 📝 Contributing
+## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## 🐛 Troubleshooting
-
-### API Key Issues
-```bash
-# Verify environment variables
-node scripts/check-setup.js
-```
-
-### User Profile Issues
-```bash
-# Check user profile status
-node scripts/check-profile.js USER_ID
-```
-
-### Database Connection
-```bash
-# Diagnose user and database
-node scripts/diagnose-user.js USER_ID
-```
-
-## 📄 License
-
-MIT License - feel free to use this project for learning and development.
-
-## 🙏 Acknowledgments
-
-- **Groq** for ultra-fast AI inference
-- **Tavily** for real-time web search
-- **Clerk** for authentication
-- **Next.js** team for the amazing framework
-
-## 📧 Contact
-
-- GitHub: [@prathamtomar99](https://github.com/prathamtomar99)
-- Repository: [AgriFlow](https://github.com/prathamtomar99/AgriFlow)
+Contributions welcome! Fork, create a feature branch, and submit a PR.
 
 ---
 
-**Built with ❤️ for farmers and agriculture enthusiasts**
+Built with ❤️ for farmers | [GitHub](https://github.com/prathamtomar99/AgriFlow)

@@ -146,6 +146,73 @@ Answer ONLY with: AGRICULTURE or NOT_AGRICULTURE`;
         }
         // ==================== END AGRICULTURE VALIDATION ====================
 
+        // ==================== DEEP THINK RESEARCH AGENT ====================
+        // If deepThinkSelected is true, route to research agent for comprehensive analysis
+        if (deepThinkSelected) {
+            console.log('[AI Router] DeepThink selected - routing to research agent');
+            
+            // Prepare conversation history for research agent
+            const conversationHistory = data.messages.slice(-10).map(msg => ({
+                role: msg.role,
+                content: msg.content
+            }));
+
+            // Call the research agent (server-side import to avoid external HTTP call)
+            try {
+                const { POST: researchHandler } = await import('../../research/route');
+                
+                // Create a mock request object
+                const mockRequest = {
+                    json: async () => ({
+                        userId,
+                        query: prompt,
+                        conversationHistory
+                    })
+                };
+
+                const researchResponse = await researchHandler(mockRequest);
+                const researchData = await researchResponse.json();
+
+                if (researchData.success) {
+                    // Save user message
+                    const userPrompt = {
+                        role: "user",
+                        content: prompt,
+                        timestamp: Date.now(),
+                        files: fileNames,
+                        hasFiles: fileNames.length > 0,
+                        documentData: documentData
+                    };
+                    
+                    // Add research metadata to response
+                    const researchMessage = {
+                        ...researchData.data,
+                        researchMode: true
+                    };
+
+                    data.messages.push(userPrompt);
+                    data.messages.push(researchMessage);
+                    await data.save();
+
+                    return NextResponse.json({
+                        success: true,
+                        data: researchMessage,
+                        metadata: {
+                            researchAgent: true,
+                            ...researchData.metadata
+                        }
+                    });
+                } else {
+                    console.error('[AI Router] Research agent failed:', researchData.error);
+                    // Fall through to normal processing if research agent fails
+                }
+            } catch (error) {
+                console.error('[AI Router] Research agent error:', error);
+                // Fall through to normal processing if research agent fails
+            }
+        }
+        // ==================== END DEEP THINK RESEARCH AGENT ====================
+
         // Use LLM with enhanced prompt to detect if user is referring to previous messages
         let isReferencingPrevious = false;
         const referenceClassifierPrompt = `You are a context classifier. Analyze if the user's message REQUIRES accessing previous chat history to provide a meaningful answer.

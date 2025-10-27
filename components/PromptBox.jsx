@@ -208,12 +208,8 @@ const PromptBox = ({setIsLoading, isLoading, isAnimatingRef}) => {
                         return { ...prev, messages: updatedMessages };
                     });
                     currentIndex += revealCount;
-                    if (currentIndex < messageTokens.length) {
-                        setTimeout(animateMessage, 5);
-                    } else {
-                        // Animation complete, trigger final update
-                        setTimeout(animateMessage, 5);
-                    }
+                    // Schedule next animation frame
+                    setTimeout(animateMessage, 5);
                 }
                 animateMessage();
             }else{
