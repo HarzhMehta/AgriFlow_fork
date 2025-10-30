@@ -179,7 +179,7 @@ export default function NewsPage() {
             
             <div className="mt-6 pt-6 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm text-gray-600">
-                <span>🌐 Language: <strong>{summary.language}</strong></span>
+                <span>📊 Articles Analyzed: <strong>{summary.resultsCount}</strong></span>
                 <span>📅 Generated: {new Date(summary.timestamp).toLocaleString()}</span>
               </div>
             </div>
