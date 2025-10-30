@@ -6,6 +6,7 @@ import { assets } from '@/assets/assets';
 import ReactMarkdown from 'react-markdown';
 import ThemeToggle from '@/components/ThemeToggle';
 import Sidebar from '@/components/Sidebar';
+import { detectAndTranslateToEnglish } from '@/utils/translateInput';
 
 export default function NewsPage() {
   const router = useRouter();
@@ -21,7 +22,26 @@ export default function NewsPage() {
       setError('Please enter a search query');
       return;
     }
-
+    // Auto-translate input to English if needed
+    let translatedQuery = query.trim();
+    let userInputLang = 'en';
+    let translationOccurred = false;
+    try {
+      const result = await detectAndTranslateToEnglish(translatedQuery);
+      translatedQuery = result.text;
+      userInputLang = result.lang;
+      translationOccurred = result.translated;
+    } catch (err) {
+      console.warn('Translation error:', err);
+    }
+    // If translation occurred, set Google Translate widget to user's language
+    if (translationOccurred && window.google && window.google.translate) {
+      try {
+        window.google.translate.TranslateElement && window.google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: userInputLang}, 'google_translate_element');
+      } catch (err) {
+        console.warn('Google Translate widget error:', err);
+      }
+    }
     setLoading(true);
     setError('');
     setSummary(null);
@@ -30,7 +50,7 @@ export default function NewsPage() {
       const res = await fetch('/api/news', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({ query: translatedQuery })
       });
 
       const data = await res.json();
@@ -186,7 +206,7 @@ export default function NewsPage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">Gathering Information...</h3>
               <p className="text-gray-600">
-                Searching multiple sources and generating summary in {language}
+                Searching multiple sources and generating summary
               </p>
             </div>
           </div>
