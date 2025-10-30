@@ -4,6 +4,7 @@ import axios from 'axios';
 import Image from 'next/image'
 import React, { useState, useRef } from 'react'
 import toast from 'react-hot-toast';
+import { detectAndTranslateToEnglish } from '@/utils/translateInput';
 
 const PromptBox = ({setIsLoading, isLoading, isAnimatingRef}) => {
 
@@ -120,6 +121,26 @@ const PromptBox = ({setIsLoading, isLoading, isAnimatingRef}) => {
             toast.error('Please add a message with your files');
             return;
         }
+        // Auto-translate input to English if needed
+        let translatedPrompt = trimmedPrompt;
+        let userInputLang = 'en';
+        let translationOccurred = false;
+        try {
+            const result = await detectAndTranslateToEnglish(trimmedPrompt);
+            translatedPrompt = result.text;
+            userInputLang = result.lang;
+            translationOccurred = result.translated;
+        } catch (err) {
+            console.warn('Translation error:', err);
+        }
+        // If translation occurred, set Google Translate widget to user's language
+        if (translationOccurred && window.google && window.google.translate) {
+            try {
+                window.google.translate.TranslateElement && window.google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: userInputLang}, 'google_translate_element');
+            } catch (err) {
+                console.warn('Google Translate widget error:', err);
+            }
+        }
         const promptCopy = prompt;
         const pendingFilesCopy = [...pendingFiles];
         try {
@@ -147,12 +168,16 @@ const PromptBox = ({setIsLoading, isLoading, isAnimatingRef}) => {
             // Show user message optimistically in UI
             setSelectedChat((prev)=> ({
                 ...prev,
-                messages: [...(prev?.messages ?? []), userPrompt]
+                messages: [...(prev?.messages ?? []), {
+                    ...userPrompt,
+                    originalInput: prompt, // Save original input for reference
+                    inputLang: userInputLang
+                }]
             }))
             // Only send searchSelected flag, let backend decide if web search is needed
             const {data} = await axios.post('/api/chat/ai', {
                 chatId: selectedChat._id,
-                prompt: trimmedPrompt,
+                prompt: translatedPrompt,
                 filesMeta: uploadResponse.files,
                 documentData: uploadResponse.documentData,
                 searchSelected,
